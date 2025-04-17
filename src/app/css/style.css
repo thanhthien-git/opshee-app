@@ -253,7 +253,10 @@ input[type='search']::-webkit-search-results-decoration {
   @apply !bg-blue;
 }
 
-
+@keyframes progressBar {
+  from { width: 100% }
+  to { width: 0% }
+}
 
 @layer base {
   * {

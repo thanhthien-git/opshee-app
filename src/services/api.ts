@@ -40,9 +40,8 @@ api.interceptors.response.use(
     ) {
       const errorMessage = error?.response.data.message || "Something wrong";
       const customErr = new Error(errorMessage);
-      customErr.name = "API_ERROR";
+      customErr.name = "";
       customErr.stack = error.stack;
-
       return Promise.reject(customErr);
     }
 

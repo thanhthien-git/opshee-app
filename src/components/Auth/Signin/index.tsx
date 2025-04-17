@@ -3,9 +3,10 @@ import Button from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import { ERROR_MESSAGE } from "@/constants/error";
 import { ROLE } from "@/enums/role.enum";
+import useNotification from "@/hooks/useNotification";
 import { selectIsLoading, setLoading } from "@/redux/features/loading-slice";
 import { AuthService } from "@/services/auth/auth.service";
-import { ILogin } from "@/services/auth/interfaces/login.interface";
+import { ILogin } from "@/services/auth/interfaces/auth.interface";
 import { StorageService } from "@/services/storage-service";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -15,6 +16,7 @@ const Signin = () => {
   const { handleSubmit, control, getValues } = useForm();
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
+  const { NotificationComponent, showNotification } = useNotification();
 
   const handleLogin = useCallback(async () => {
     try {
@@ -29,18 +31,22 @@ const Signin = () => {
       //set token
       StorageService.setToken(response);
       //then redirect to main page
+      showNotification("Login successfully", 3000, "SUCCESS");
+      window.location.href = "/signin"
     } catch (error) {
       console.log(error);
+      showNotification("Login failed. Please try again.", 5000, "ERROR");
     } finally {
       dispatch(setLoading(false));
     }
-  }, [getValues, dispatch]);
+  }, [getValues, dispatch, showNotification]);
 
   return (
     <section className="overflow-hidden py-20 bg-gray-2 sm:mt-20 xl:mt-36 ">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
         <div className="max-w-[570px] w-full mx-auto rounded-xl bg-white shadow-1 p-4 sm:p-7.5 xl:p-11">
           <div className="text-center mb-11">
+            <NotificationComponent />
             <h2 className="font-semibold text-xl sm:text-2xl xl:text-heading-5 text-dark mb-1.5">
               Welcome back to Opshee!
             </h2>
@@ -100,7 +106,7 @@ const Signin = () => {
                 </a>
 
                 <a
-                  href="#"
+                  href="/signup"
                   className="block text-center mt-4.5 ease-out duration-200 hover:text-dark"
                 >
                   Don&apos;t have an account?
@@ -113,7 +119,10 @@ const Signin = () => {
               </span>
 
               <div className="flex flex-col gap-4.5 mt-4.5">
-                <button className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2">
+                <button
+                  type="button"
+                  className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2"
+                >
                   <svg
                     width="20"
                     height="20"
