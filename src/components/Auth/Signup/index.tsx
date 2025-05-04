@@ -9,6 +9,7 @@ import useNotification from "@/hooks/useNotification";
 import { selectIsLoading, setLoading } from "@/redux/features/loading-slice";
 import { AuthService } from "@/services/auth/auth.service";
 import { IUserRegister } from "@/services/auth/interfaces/auth.interface";
+import { StorageService } from "@/services/storage-service";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -62,9 +63,11 @@ const Signup = () => {
 
       const response = await AuthService.register(formData);
       showNotification(response.message, 5000, "SUCCESS");
-      window.location.href = "/signin"
+      StorageService.setToken(response);
+      window.location.href = "";
     } catch (err) {
-      showNotification(err.message, 5000, "ERROR");
+      console.log(err);
+      showNotification(err, 5000, "ERROR");
     } finally {
       dispatch(setLoading(false));
     }

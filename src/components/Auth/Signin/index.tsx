@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
+import { config } from "@/constants/config";
 import { ERROR_MESSAGE } from "@/constants/error";
 import { ROLE } from "@/enums/role.enum";
 import useNotification from "@/hooks/useNotification";
@@ -8,7 +9,7 @@ import { selectIsLoading, setLoading } from "@/redux/features/loading-slice";
 import { AuthService } from "@/services/auth/auth.service";
 import { ILogin } from "@/services/auth/interfaces/auth.interface";
 import { StorageService } from "@/services/storage-service";
-import React, { useCallback } from "react";
+import React, { useCallback, useReducer } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,15 +33,15 @@ const Signin = () => {
       StorageService.setToken(response);
       //then redirect to main page
       showNotification("Login successfully", 3000, "SUCCESS");
-      window.location.href = "/signin"
+      window.location.href = "/";
     } catch (error) {
-      console.log(error);
-      showNotification("Login failed. Please try again.", 5000, "ERROR");
+      showNotification(error.message, 5000, "ERROR");
     } finally {
       dispatch(setLoading(false));
     }
   }, [getValues, dispatch, showNotification]);
 
+  
   return (
     <section className="overflow-hidden py-20 bg-gray-2 sm:mt-20 xl:mt-36 ">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">

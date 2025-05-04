@@ -3,7 +3,10 @@ export const endpoint = {
 
   auth: {
     login: "/auth/login",
-    register : "/auth/sign-up"
+    register: "/auth/sign-up",
+  },
+
+  user: {
+    me: "/user/me",
   },
 };
-
